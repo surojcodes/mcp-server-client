@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "name": "Sandy Jones",
+    "email": "sandy.jones@example.com",
+    "address": "123 Main St",
+    "phone": "555-1234"
+  },
+  {
+    "id": 2,
+    "name": "Michael Smith",
+    "email": "michael.smith@example.com",
+    "address": "456 Oak Ave",
+    "phone": "555-5678"
+  },
+  {
+    "id": 3,
+    "name": "Emily Davis",
+    "email": "emily.davis@example.com",
+    "address": "789 Pine Rd",
+    "phone": "555-9012"
+  },
+  {
+    "id": 4,
+    "name": "Suroj",
+    "email": "test@test.con",
+    "address": "145 main st",
+    "phone": "7770-989"
+  }
+]
