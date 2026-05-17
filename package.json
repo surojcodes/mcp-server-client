@@ -4,8 +4,8 @@
   "description": "MCP Server",
   "license": "MIT",
   "author": "surojcodes@gmail.com",
-  "main": "src/server.ts",
-  "type": "module",
+  "main": "dist/server.js",
+  "type":"module",
   "scripts": {
     "server:build": "tsc",
     "server:build:watch": "tsc -w",
@@ -13,7 +13,8 @@
     "server:inspect": "set DANGEROUSLY_OMIT_AUTH=true && npx @modelcontextprotocol/inspector npm run server:dev"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.29.0"
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@modelcontextprotocol/inspector": "^0.21.2",
