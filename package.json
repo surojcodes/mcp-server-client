@@ -1,0 +1,14 @@
+{
+  "name": "mcp-server-client",
+  "version": "1.0.0",
+  "description": "MCP Server",
+  "license": "MIT",
+  "author": "surojcodes@gmail.com",
+  "main": "src/server.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0"
+  }
+}
