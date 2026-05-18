@@ -1,8 +1,8 @@
-import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { McpServer, ResourceTemplate } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
 import users from './data/users.json' with { type: 'json' };
-import expenses from './data/expenses.json' with { type: 'json' };
+import expensesJson from './data/expenses.json' with { type: 'json' };
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -89,7 +89,30 @@ server.registerResource("expenses", "expenses://all", {
   const uriString = uri.toString();
   return {
     contents: [
-      { uri: uriString, mimeType: "application/json", text: JSON.stringify(expenses) }
+      { uri: uriString, mimeType: "application/json", text: JSON.stringify(expensesJson) }
+    ]
+  };
+});
+server.registerResource("daily-total-expenses", new ResourceTemplate("expenses://daily-total/{month}/{day}", { list: undefined }), {
+  title: "Daily Total Expenses",
+  description: "A list of daily total expenses for a given month and day.",
+  mimeType: "application/json",
+}, async (uri, { month, day }) => {
+  const monthString = Array.isArray(month) ? month[0] : month as string;
+  const dayString = Array.isArray(day) ? day[0] : day as string;
+
+  const uriString = uri.toString();
+  const expenses = expensesJson as Record<string, { date: string; description: string; amount: number; }[]>;
+
+  const dailyTotal = expenses[monthString.toLowerCase()]?.reduce((total: number, expense: { date: string; amount: number; }) => {
+    if (parseInt(expense.date) === parseInt(dayString)) {
+      return total + expense.amount;
+    }
+    return total;
+  }, 0);
+  return {
+    contents: [
+      { uri: uriString, mimeType: "application/json", text: JSON.stringify({ month, day, total: dailyTotal ?? 'No data for given date' }) }
     ]
   };
 });
