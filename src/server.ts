@@ -79,7 +79,6 @@ server.registerTool("get_github_repos", {
   };
 });
 
-
 server.registerResource("expenses", "expenses://all", {
   title: "All Expenses",
   description: "A list of all expenses.",
@@ -89,6 +88,26 @@ server.registerResource("expenses", "expenses://all", {
   return {
     contents: [
       { uri: uriString, mimeType: "text/plain", text: JSON.stringify(expenses) }
+    ]
+  };
+});
+
+server.registerPrompt("explain_sql_query", {
+  title: "Explain SQL Query",
+  description: "Explains the purpose and functionality of a given SQL query.",
+  argsSchema: {
+    query: z.string().describe("The SQL query to be explained.")
+  },
+}, async (params) => {
+  const { query } = params;
+  return {
+    messages: [
+      {
+        role: "user", content: {
+          type: "text",
+          text: `Please explain the following SQL query:\n\n${query}. Give me a detailed explanation of what this query does, including the purpose of each clause and how it works together to produce the final result.`
+        }
+      },
     ]
   };
 });
