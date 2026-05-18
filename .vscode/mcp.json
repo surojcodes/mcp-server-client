@@ -1,18 +1,18 @@
 {
 	"servers": {
-		"test-mcp-server-9582d141": {
-			"type": "stdio",
-			"command": "node",
-			"args": [
-				"dist/server.js"
-			],
-			"cwd": "${workspaceFolder}",
-			"dev": {
-				"watch": "dist/**/*.js",
-				"debug": {
-					"type": "node"
-				}
-			}
-		}
+		// "test-mcp-server-9582d141": {
+		// 	"type": "stdio",
+		// 	"command": "node",
+		// 	"args": [
+		// 		"dist/server.js"
+		// 	],
+		// 	"cwd": "${workspaceFolder}",
+		// 	"dev": {
+		// 		"watch": "dist/**/*.js",
+		// 		"debug": {
+		// 			"type": "node"
+		// 		}
+		// 	}
+		// }
 	},
 }

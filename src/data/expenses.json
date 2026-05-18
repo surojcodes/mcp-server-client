@@ -1,0 +1,39 @@
+{
+  "may":[
+    {
+      "date":"2024-05-01",
+      "description":"Groceries",
+      "amount":150.75
+    },
+    {
+      "date":"2024-05-02",
+      "description":"Gas Station",
+      "amount":40.00
+    },
+    {
+      "date":"2024-05-02",
+      "description":"Electricity Bill",
+      "amount":60.50
+    },
+    {
+      "date":"2024-05-03",
+      "description":"Internet Subscription",
+      "amount":45.00
+    },
+    {
+      "date":"2024-05-03",
+      "description":"Coffee",
+      "amount":5.00
+    },
+        {
+      "date":"2024-05-04",
+      "description":"Coffee",
+      "amount":8.00
+    },
+    {
+      "date":"2024-05-05",
+      "description":"Coffee",
+      "amount":8.00
+    }
+  ]
+}

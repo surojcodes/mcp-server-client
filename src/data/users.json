@@ -19,12 +19,5 @@
     "email": "emily.davis@example.com",
     "address": "789 Pine Rd",
     "phone": "555-9012"
-  },
-  {
-    "id": 4,
-    "name": "Suroj",
-    "email": "test@test.con",
-    "address": "145 main st",
-    "phone": "7770-989"
   }
 ]

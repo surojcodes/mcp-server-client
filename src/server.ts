@@ -2,6 +2,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
 import users from './data/users.json' with { type: 'json' };
+import expenses from './data/expenses.json' with { type: 'json' };
 import fs from 'node:fs/promises';
 
 const server = new McpServer({
@@ -74,6 +75,20 @@ server.registerTool("get_github_repos", {
     content: [
       { type: "text", text: `Listing Repositories for user: ${username}` },
       { type: "text", text: repoList }
+    ]
+  };
+});
+
+
+server.registerResource("expenses", "expenses://all", {
+  title: "All Expenses",
+  description: "A list of all expenses.",
+  mimeType: "text/plain",
+}, async (uri) => {
+  const uriString = uri.toString();
+  return {
+    contents: [
+      { uri: uriString, mimeType: "text/plain", text: JSON.stringify(expenses) }
     ]
   };
 });
