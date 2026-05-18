@@ -9,8 +9,7 @@
   "scripts": {
     "server:build": "tsc",
     "server:build:watch": "tsc -w",
-    "server:dev": "tsx src/server.ts",
-    "server:inspect": "set DANGEROUSLY_OMIT_AUTH=true && npx @modelcontextprotocol/inspector npm run server:dev"
+    "server:inspect": "set DANGEROUSLY_OMIT_AUTH=true && npx @modelcontextprotocol/inspector node dist/server.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",

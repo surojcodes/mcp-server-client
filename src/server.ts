@@ -43,7 +43,40 @@ server.registerTool("create-user", {
     };
   }
 });
-
+server.registerTool("get_github_repos", {
+  title: "Get GitHub Repositories",
+  description: "Fetches the public repositories of a GitHub user.",
+  inputSchema: {
+    username: z.string().describe("The GitHub username to fetch repositories for.")
+  },
+  annotations: {
+    title: "Get GitHub Repositories",
+    readOnlyHint: true,
+    destructiveHint: false,
+    idempotentHint: true,
+  }
+}, async ({ username }) => {
+  const res = await fetch(`https://api.github.com/users/${username}/repos`, {
+    headers: {
+      'user-agent': 'MCP-Server'
+    }
+  });
+  if (!res.ok) {
+    return {
+      content: [
+        { type: "text", text: `Failed to fetch repositories for user: ${username}` }
+      ]
+    };
+  }
+  const repos = await res.json();
+  const repoList = repos.map((repo: any, index: number) => `${index + 1}. ${repo.name}`).join('\n');
+  return {
+    content: [
+      { type: "text", text: `Listing Repositories for user: ${username}` },
+      { type: "text", text: repoList }
+    ]
+  };
+});
 
 async function createUser(user: { name: string; email: string; address: string; phone: string; }) {
   const id = users.length + 1;
