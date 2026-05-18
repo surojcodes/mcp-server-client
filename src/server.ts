@@ -4,6 +4,8 @@ import { z } from 'zod';
 import users from './data/users.json' with { type: 'json' };
 import expenses from './data/expenses.json' with { type: 'json' };
 import fs from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const server = new McpServer({
   name: 'My MCP Server',
@@ -82,12 +84,12 @@ server.registerTool("get_github_repos", {
 server.registerResource("expenses", "expenses://all", {
   title: "All Expenses",
   description: "A list of all expenses.",
-  mimeType: "text/plain",
+  mimeType: "application/json",
 }, async (uri) => {
   const uriString = uri.toString();
   return {
     contents: [
-      { uri: uriString, mimeType: "text/plain", text: JSON.stringify(expenses) }
+      { uri: uriString, mimeType: "application/json", text: JSON.stringify(expenses) }
     ]
   };
 });
@@ -115,7 +117,12 @@ server.registerPrompt("explain_sql_query", {
 async function createUser(user: { name: string; email: string; address: string; phone: string; }) {
   const id = users.length + 1;
   users.push({ id, ...user });
-  await fs.writeFile('./src/data/users.json', JSON.stringify(users, null, 2));
+
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+  const filePath = path.join(__dirname, 'data', 'users.json');
+
+  await fs.writeFile(filePath, JSON.stringify(users, null, 2));
   return id;
 }
 
