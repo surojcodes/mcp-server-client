@@ -6,6 +6,7 @@ import expensesJson from './data/expenses.json' with { type: 'json' };
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { CreateMessageResultSchema } from '@modelcontextprotocol/sdk/types.js';
 
 const server = new McpServer({
   name: 'My MCP Server',
@@ -135,6 +136,54 @@ server.registerPrompt("explain_sql_query", {
       },
     ]
   };
+});
+server.registerTool("create-random-user", {
+  title: "Create a random user with fake data",
+  description: "Creates a new user with random fake data for testing purposes.",
+  annotations: {
+    title: "Create random User",
+    readOnlyHint: false,
+    destructiveHint: false,
+    idempotentHint: false,
+    openWorldHint: true
+  }
+}, async () => {
+  //send req to client 
+  const result = await server.server.request(
+    {
+      method: "sampling/createMessage",
+      params: {
+        messages:
+          [{
+            role: "user",
+            content: { type: "text", text: "Generate random user data including name, email, address, and phone number for testing purposes.Return the data in JSON format with no other text or formatting so that it can be used with JSON.parse. The generated user should have an ID, name, email, address, and phone number." }
+          }], maxTokens: 1024
+      }
+    }, CreateMessageResultSchema);
+
+  if (result.content.type !== "text") {
+    return {
+      content: [{ type: "text", text: "Failed to generate random user data." }]
+    };
+  }
+  try {
+    const userData = JSON.parse(result.content.text
+      .trim()
+      .replace(/```json/g, '')
+      .replace(/```/g, '')
+      .trim());
+    const id = await createUser(userData);
+    return {
+      content: [
+        { type: "text", text: `User created successfully with ID: ${id}` }
+      ]
+    };
+  } catch (e) {
+    console.error("Error parsing user data:", e);
+    return {
+      content: [{ type: "text", text: "Failed to parse generated user data." }]
+    };
+  }
 });
 
 async function createUser(user: { name: string; email: string; address: string; phone: string; }) {
