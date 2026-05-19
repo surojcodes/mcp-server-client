@@ -48,7 +48,32 @@ async function main() {
         }
         break;
 
-
+      case "Resources":
+        const resourceUri = await select({
+          message: "Select a resource",
+          choices: [
+            ...resources.map(resource => ({
+              name: resource.name,
+              value: resource.uri,
+              description: resource.description,
+            })),
+            ...resourceTemplates.map(template => ({
+              name: template.name,
+              value: template.uriTemplate,
+              description: template.description,
+            })),
+          ],
+        });
+        const uri =
+          resources.find(r => r.uri === resourceUri)?.uri ??
+          resourceTemplates.find(r => r.uriTemplate === resourceUri)
+            ?.uriTemplate;
+        if (uri == null) {
+          console.error("Resource not found.");
+        } else {
+          await handleResource(uri);
+        }
+        break;
     }
   }
 }
@@ -71,4 +96,24 @@ async function handleTool(tool: Tool) {
   console.log((res.content as [{ text: string; }])[0].text);
 }
 
+async function handleResource(uri: string) {
+  let finalUri = uri;
+  // Check if the URI template has parameters (e.g., {param})
+  const paramMatches = uri.match(/{([^}]+)}/g);
+  // If the URI template has parameters, prompt the user to input values for them
+  if (paramMatches != null) {
+    for (const paramMatch of paramMatches) {
+      const paramName = paramMatch.replace("{", "").replace("}", "");
+      const paramValue = await input({
+        message: `Enter value for ${paramName}:`,
+      });
+      finalUri = finalUri.replace(paramMatch, paramValue);
+    }
+  }
+  const res = await mcpClient.readResource({ uri: finalUri });
+  const value = "text" in res.contents[0] ? res.contents[0].text : res.contents[0].blob;
+  console.log(
+    JSON.stringify(JSON.parse(value), null, 2)
+  );
+}
 main();
