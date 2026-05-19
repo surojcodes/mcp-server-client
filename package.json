@@ -5,14 +5,17 @@
   "license": "MIT",
   "author": "surojcodes@gmail.com",
   "main": "dist/server.js",
-  "type":"module",
+  "type": "module",
   "scripts": {
     "server:build": "tsc",
     "server:build:watch": "tsc -w",
-    "server:inspect": "set DANGEROUSLY_OMIT_AUTH=true && npx @modelcontextprotocol/inspector node dist/server.js"
+    "server:inspect": "set DANGEROUSLY_OMIT_AUTH=true && npx @modelcontextprotocol/inspector node dist/server.js",
+    "client:dev": "tsx src/client.ts"
   },
   "dependencies": {
+    "@inquirer/prompts": "^8.4.3",
     "@modelcontextprotocol/sdk": "^1.29.0",
+    "dotenv": "^17.4.2",
     "zod": "^4.4.3"
   },
   "devDependencies": {
