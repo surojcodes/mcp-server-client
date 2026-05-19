@@ -3,8 +3,8 @@ import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { confirm, input, select } from '@inquirer/prompts';
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
-import { Prompt, PromptMessage, Tool } from '@modelcontextprotocol/sdk/types.js';
-import { generateText, ToolSet, jsonSchema } from 'ai';
+import { CreateMessageRequestSchema, Prompt, PromptMessage, Tool } from '@modelcontextprotocol/sdk/types.js';
+import { generateText } from 'ai';
 
 const mcpClient = new Client({
   name: "text-client",
@@ -30,6 +30,26 @@ async function main() {
     mcpClient.listResources(),
     mcpClient.listResourceTemplates()
   ]);
+
+  mcpClient.setRequestHandler(CreateMessageRequestSchema, async request => {
+    const texts: string[] = [];
+    for (const message of request.params.messages) {
+      const text = await handleServerMessagePrompt(message as PromptMessage);
+      if (text != null) texts.push(text);
+    }
+    return {
+      role: "user",
+      model: "gemini-2.0-flash",
+      stopReason: "endTurn",
+      content: {
+        type: "text",
+        text: texts.join("\n"),
+      },
+    };
+  });
+
+
+
   console.log("Your are connected to the MCP server!");
   while (true) {
     const option = await select({
@@ -100,7 +120,7 @@ async function main() {
         break;
 
       case "Query":
-        await handleQuery(tools);
+        await handleQuery();
     }
   }
 }
@@ -177,7 +197,7 @@ async function handleServerMessagePrompt(message: PromptMessage) {
   return text;
 }
 
-async function handleQuery(tools: Tool[]) {
+async function handleQuery() {
   const query = await input({ message: "Enter your query" });
 
   const { text, toolResults } = await generateText({
